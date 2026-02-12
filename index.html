@@ -296,8 +296,10 @@
         .btn-no {
             background: #e8e8e8;
             color: #333;
-            right: 10px;
-            top: 20px;
+            position: fixed !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
         }
 
         .buttons-hint {
@@ -779,21 +781,24 @@
         // ========== NO BUTTON BEHAVIOR ==========
         function setupNoButton() {
             const btnNo = document.getElementById('btnNo');
-            const container = document.getElementById('buttonsContainer');
 
             const moveNoButton = () => {
-                const containerRect = container.getBoundingClientRect();
-                const btnRect = btnNo.getBoundingClientRect();
+                // Generate random position on screen
+                const btn = btnNo.getBoundingClientRect();
+                const btnWidth = btn.width;
+                const btnHeight = btn.height;
 
-                // Calculate safe position within container
-                const maxLeft = containerRect.width - btnRect.width - 20;
-                const maxTop = containerRect.height - btnRect.height - 20;
+                // Safe margins to keep button visible on screen
+                const margin = 30;
+                const maxX = window.innerWidth - btnWidth - margin;
+                const maxY = window.innerHeight - btnHeight - margin;
 
-                const randomLeft = Math.max(20, Math.floor(Math.random() * maxLeft));
-                const randomTop = Math.max(20, Math.floor(Math.random() * maxTop));
+                const randomX = Math.max(margin, Math.floor(Math.random() * maxX));
+                const randomY = Math.max(margin, Math.floor(Math.random() * maxY));
 
-                btnNo.style.left = randomLeft + 'px';
-                btnNo.style.top = randomTop + 'px';
+                btnNo.style.left = randomX + 'px';
+                btnNo.style.top = randomY + 'px';
+                btnNo.style.transform = 'none';
 
                 // Change hint
                 const randomHint = hints[Math.floor(Math.random() * hints.length)];
