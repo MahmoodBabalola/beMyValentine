@@ -296,10 +296,8 @@
         .btn-no {
             background: #e8e8e8;
             color: #333;
-            position: fixed !important;
-            left: 50% !important;
-            top: 50% !important;
-            transform: translate(-50%, -50%) !important;
+            right: 10px;
+            top: 20px;
         }
 
         .buttons-hint {
@@ -506,18 +504,6 @@
             touchStartOffset: null,
             dragGhost: null,
         };
-
-        // Hints for NO button
-        const hints = [
-            "Nice try 😭",
-            "Curator says: choose YES.",
-            "System error: NO not supported.",
-            "This button has stage fright.",
-            "The answer is obvious ✨",
-            "Configuration error: NO.isClickable = false",
-            "Hint: YES is over there →",
-            "I already know what you'll choose 💕",
-        ];
 
         // ========== INITIALIZATION ==========
         function startPuzzle() {
@@ -782,42 +768,25 @@
         function setupNoButton() {
             const btnNo = document.getElementById('btnNo');
 
-            const moveNoButton = () => {
-                // Generate random position on screen
-                const btn = btnNo.getBoundingClientRect();
-                const btnWidth = btn.width;
-                const btnHeight = btn.height;
+            const funnyMessages = [
+                "Sorry, that button doesn't work! 🤷",
+                "Nice try... but no 😊",
+                "Error 404: NO not found",
+                "System says: Only YES accepted ✨",
+                "That button is broken... permanently 💔",
+                "You're not getting out of this one 😄",
+                "The answer is obvious... YES! 💕",
+                "Plot twist: NO doesn't exist 🎬",
+                "Try the other button instead 👉",
+                "I already know your answer 😉",
+                "Nice try, but I'm not letting you say no 💪",
+                "This button is on vacation 🏖️"
+            ];
 
-                // Safe margins to keep button visible on screen
-                const margin = 30;
-                const maxX = window.innerWidth - btnWidth - margin;
-                const maxY = window.innerHeight - btnHeight - margin;
-
-                const randomX = Math.max(margin, Math.floor(Math.random() * maxX));
-                const randomY = Math.max(margin, Math.floor(Math.random() * maxY));
-
-                btnNo.style.left = randomX + 'px';
-                btnNo.style.top = randomY + 'px';
-                btnNo.style.transform = 'none';
-
-                // Change hint
-                const randomHint = hints[Math.floor(Math.random() * hints.length)];
-                document.getElementById('hint').textContent = randomHint;
-            };
-
-            // Listen to all interaction attempts
-            btnNo.addEventListener('mouseenter', moveNoButton);
-            btnNo.addEventListener('mousemove', moveNoButton);
-            btnNo.addEventListener('mousedown', moveNoButton);
-            btnNo.addEventListener('pointerenter', moveNoButton);
-            btnNo.addEventListener('pointerdown', moveNoButton);
-            btnNo.addEventListener('focus', moveNoButton);
-            btnNo.addEventListener('touchstart', moveNoButton);
-
-            // Prevent click
             btnNo.addEventListener('click', (e) => {
                 e.preventDefault();
-                moveNoButton();
+                const randomMsg = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+                document.getElementById('hint').textContent = randomMsg;
                 return false;
             });
         }
