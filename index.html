@@ -712,11 +712,13 @@
                 ghost.style.position = 'fixed';
                 ghost.style.pointerEvents = 'none';
                 ghost.style.zIndex = '10000';
-                ghost.style.opacity = '0.8';
-                ghost.style.backgroundColor = 'rgba(0,0,0,0.05)';
+                ghost.style.opacity = '1';
                 ghost.style.width = this.offsetWidth + 'px';
                 ghost.style.height = this.offsetHeight + 'px';
                 ghost.style.borderRadius = '4px';
+                ghost.style.border = '3px solid #333';
+                ghost.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.3)';
+                ghost.style.transform = 'scale(1.05)';
                 document.body.appendChild(ghost);
                 puzzleState.dragGhost = ghost;
             }
