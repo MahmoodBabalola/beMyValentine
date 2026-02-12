@@ -502,6 +502,7 @@
             draggedElement: null,
             touchStartPos: null,
             touchStartOffset: null,
+            dragGhost: null,
         };
 
         // Hints for NO button
@@ -703,11 +704,39 @@
             puzzleState.touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
             puzzleState.draggedElement = this;
             this.classList.add('dragging');
+
+            // Create visual ghost for mobile drag feedback
+            if (!puzzleState.dragGhost) {
+                const ghost = this.cloneNode(true);
+                ghost.id = 'drag-ghost';
+                ghost.style.position = 'fixed';
+                ghost.style.pointerEvents = 'none';
+                ghost.style.zIndex = '10000';
+                ghost.style.opacity = '0.8';
+                ghost.style.backgroundColor = 'rgba(0,0,0,0.05)';
+                ghost.style.width = this.offsetWidth + 'px';
+                ghost.style.height = this.offsetHeight + 'px';
+                ghost.style.borderRadius = '4px';
+                document.body.appendChild(ghost);
+                puzzleState.dragGhost = ghost;
+            }
+            
+            // Position ghost at touch point
+            const ghostSize = this.offsetWidth;
+            puzzleState.dragGhost.style.left = (puzzleState.touchStartPos.x - ghostSize / 2) + 'px';
+            puzzleState.dragGhost.style.top = (puzzleState.touchStartPos.y - ghostSize / 2) + 'px';
         }
 
         function handleTouchMove(e) {
             if (e.preventDefault) {
                 e.preventDefault();
+            }
+
+            // Move ghost to follow touch point
+            if (puzzleState.dragGhost && e.touches[0]) {
+                const ghostSize = puzzleState.dragGhost.offsetWidth;
+                puzzleState.dragGhost.style.left = (e.touches[0].clientX - ghostSize / 2) + 'px';
+                puzzleState.dragGhost.style.top = (e.touches[0].clientY - ghostSize / 2) + 'px';
             }
         }
 
@@ -716,6 +745,13 @@
             if (!draggedElement) return;
 
             const endPos = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+            
+            // Remove ghost
+            if (puzzleState.dragGhost) {
+                puzzleState.dragGhost.remove();
+                puzzleState.dragGhost = null;
+            }
+
             const elementAtEnd = document.elementFromPoint(endPos.x, endPos.y);
             const slot = elementAtEnd?.closest('.puzzle-slot');
 
